@@ -338,7 +338,7 @@ for (let i = 0; i < count; i++) {
 
 
 const htmlContent = `
-  <html>
+ <html>
   <head>
    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
@@ -347,13 +347,14 @@ const htmlContent = `
       body { 
         font-family: "Poppins", sans-serif; 
         background: white;
-        width: 80mm;
+        width: 80mm; /* page width */
         margin: 0 auto;
       }
 
       .barcode-container {
-        width: 75mm;
-        margin: 0 auto;
+        width: 100%;
+        margin-left: 10mm;
+        margin-top: 2mm;
         padding: 0;
         display: flex;
         flex-direction: column;
@@ -362,43 +363,44 @@ const htmlContent = `
 
       .barcode-row {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 2mm;
       }
 
       .barcode-label {
-        width: 75mm;
-        height: 25mm;
+        width: 30mm;
+        height: 22mm;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-between;
         align-items: center;
-        padding: 0.5mm 0.5mm;
+        padding: 1mm 0.8mm;
         text-align: center;
         background: white;
         box-sizing: border-box;
         overflow: hidden;
+        border: 0.2mm solid #ddd; /* only for preview */
       }
 
       .product-name {
-        font-size: 13px;
-        font-weight: bold;
-        line-height: 1;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.1;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         width: 100%;
-        margin-bottom: 1mm;
       }
 
       .barcode-svg {
         width: 100%;
-        height: 13mm;
+        height: 12mm; /* increased height */
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 1mm 0; /* add top & bottom space */
         overflow: hidden;
-        padding: 0 2mm;
-        margin-bottom: 1mm;
       }
 
       .barcode-svg svg {
@@ -410,37 +412,28 @@ const htmlContent = `
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 5mm;
-        font-size: 11px;
+        font-size: 19px;
         width: 100%;
+        font-weight: 700;
         white-space: nowrap;
-        font-weight: 600;
-        font-feature-settings: "tnum", "zero";
-        font-variant-numeric: tabular-nums;
-      }
-
-      .bottom-info .span1,
-      .bottom-info .span2 {
-        overflow: hidden;
-        text-overflow: ellipsis;
+        line-height: 1;
       }
 
       @media print {
         @page {
-          margin: 0;
+          margin: 1mm;
           size: 80mm auto;
         }
 
         body {
           margin: 0;
           padding: 0;
-          width: 80mm;
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
         }
 
         .barcode-label {
-          border: none;
+          border: none; /* remove border on print */
           break-inside: avoid;
         }
 
@@ -457,12 +450,9 @@ const htmlContent = `
           ([i]) => `
         <div class="barcode-row">
           <div class="barcode-label">
-            <div class="product-name">${selectedProduct.name || 'N/A'}</div>
+            <div class="product-name">${selectedProduct.code || 'N/A'}</div>
             <div class="barcode-svg"><svg id="barcode${i}"></svg></div>
-            <div class="bottom-info">
-              <span class="span1">${selectedProduct.code || 'N/A'}</span>
-              <span class="span2">${selectedProduct.selling_price ?? 'N/A'} LKR</span>
-            </div>
+            <div class="bottom-info">${selectedProduct.selling_price ?? 'N/A'} LKR </div>
           </div>
         </div>
       `
@@ -470,7 +460,9 @@ const htmlContent = `
         .join('')}
     </div>
   </body>
-  </html>
+</html>
+
+
 `
 
 
@@ -492,8 +484,8 @@ const htmlContent = `
       JsBarcode(svg, barcode, {
         format: 'CODE128',
         lineColor: '#000',
-        width: 1,
-        height: 35,
+        width: 1.5,
+        height: 50,
         displayValue: false,
         margin: 0,
       })

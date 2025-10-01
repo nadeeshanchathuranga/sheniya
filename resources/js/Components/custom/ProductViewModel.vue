@@ -190,62 +190,58 @@
                   </p>
 
                   <div class="mt-2">
-                    <input
-                      hidden
-                      type="text"
-                      id="barcodeInput"
-                      v-model="selectedProduct.barcode"
-                      class="w-full px-4 py-2 placeholder-gray-400 border-gray-300 rounded order f focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
-                    />
+              <!-- Inside Right Side under Print Barcode Button -->
+<div class="mt-4 w-full">
+  <label class="block mb-1 text-xl text-gray-700">Number of Barcodes:</label>
+  <input
+    type="number"
+    v-model="barcodeCount"
+    min="1"
+    class="w-full px-4 py-2 text-xl border rounded focus:outline-none focus:ring focus:ring-blue-300"
+  />
+</div>
 
-                    <button
-                      v-if="HasRole(['Admin', 'Manager'])"
-                      class="w-full px-4 py-3 text-2xl font-semibold tracking-widest text-white bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-                      @click="generateAndPrintBarcode"
-                    >
-                      Print Bar Code
-                    </button>
+<button
+  v-if="HasRole(['Admin', 'Manager'])"
+  class="w-full px-4 py-3 mt-4 text-2xl font-semibold tracking-widest text-white bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+  @click="generateAndPrintBarcodes"
+>
+  Print Bar Codes
+</button>
                   </div>
                 </div>
               </div>
 
               <!-- Hidden container for printing -->
-              <div
-                :class="{ hidden: !isVisible }"
-                id="printContainer"
-                class="print-container"
-              >
-                <div class="print-content">
-                  <!-- <div class="product-details">
-                    <p class="product-category">
-                      {{ selectedProduct.category?.name || "N/A" }}
-                    </p>
-                    <p class="product-price">
-                      {{ selectedProduct?.selling_price ?? "N/A" }} LKR
-                    </p>
-                  </div> -->
 
-                  <p class="product-code">
-                    {{ selectedProduct?.name || "N/A" }}
-                  </p>
 
-                  <!-- Barcode -->
-                  <svg id="barcodePrint"></svg>
 
-                  <!-- <p class="product-code">
-                    {{ selectedProduct?.code ?? "N/A" }}
-                  </p> -->
 
-                  <div class="product-details">
-                    <p class="product-category">
-                      {{ selectedProduct?.code ?? "N/A" }}
-                    </p>
-                    <p class="product-price">
-                      {{ selectedProduct?.selling_price ?? "N/A" }} LKR
-                    </p>
-                  </div>
-                </div>
-              </div>
+<!-- Print container for multiple barcodes -->
+<div :class="{ hidden: !isVisible }" id="printContainer" class="print-container">
+  <div class="print-wrapper">
+    <div
+      class="print-content"
+      v-for="n in barcodeCount"
+      :key="n"
+    >
+      <p class="product-code">{{ selectedProduct?.name || "N/A" }}</p>
+      <svg :id="`barcodePrint${n}`"></svg>
+      <div class="product-details">
+        <p class="product-category">{{ selectedProduct?.code ?? "N/A" }}</p>
+        <p class="product-price">{{ selectedProduct?.selling_price ?? "N/A" }} LKR</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
             </div>
           </DialogPanel>
         </TransitionChild>
@@ -312,33 +308,206 @@ const formattedDate = computed(() =>
     : ""
 );
 
-function generateAndPrintBarcode() {
-  const input = document.getElementById("barcodeInput").value;
-  const barcodePrintElement = document.getElementById("barcodePrint");
 
-  if (input.trim() === "") {
-    alert("Please enter text to generate and print a barcode.");
-    return;
+
+const barcodeCount = ref(1);
+
+
+
+ function generateAndPrintBarcodes() {
+  const barcode = selectedProduct?.barcode
+  const count = parseInt(barcodeCount.value)
+
+  if (!barcode || barcode.trim() === '') {
+    alert('Please enter a barcode value.')
+    return
   }
 
-  JsBarcode(barcodePrintElement, input, {
-    format: "CODE128", // Code 128 is compact and ideal for small labels
-    lineColor: "#000", // Black lines for high contrast
-    width: 1.2, // Wider bars to fill the label width
-    height: 50, // Barcode height adjusted for the label
-    displayValue: false, // Disable text display
-    margin: 0, // Remove default margins
-  });
+  if (!count || count < 1) {
+    alert('Please enter a valid number of barcodes.')
+    return
+  }
 
-  const printContents = document.getElementById("printContainer").innerHTML;
-  const originalContents = document.body.innerHTML;
-
-  document.body.innerHTML = printContents;
-  window.print();
-  document.body.innerHTML = originalContents;
-
-  location.reload();
+const rows = []
+for (let i = 0; i < count; i++) {
+  rows.push([i + 1])
 }
+
+
+
+
+
+const htmlContent = `
+  <html>
+  <head>
+   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { 
+        font-family: "Poppins", sans-serif; 
+        background: white;
+        width: 80mm;
+        margin: 0 auto;
+      }
+
+      .barcode-container {
+        width: 75mm;
+        margin: 0 auto;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0mm;
+      }
+
+      .barcode-row {
+        display: flex;
+        justify-content: center;
+      }
+
+      .barcode-label {
+        width: 75mm;
+        height: 25mm;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5mm 0.5mm;
+        text-align: center;
+        background: white;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+
+      .product-name {
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        margin-bottom: 1mm;
+      }
+
+      .barcode-svg {
+        width: 100%;
+        height: 13mm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 0 2mm;
+        margin-bottom: 1mm;
+      }
+
+      .barcode-svg svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .bottom-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 5mm;
+        font-size: 11px;
+        width: 100%;
+        white-space: nowrap;
+        font-weight: 600;
+        font-feature-settings: "tnum", "zero";
+        font-variant-numeric: tabular-nums;
+      }
+
+      .bottom-info .span1,
+      .bottom-info .span2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      @media print {
+        @page {
+          margin: 0;
+          size: 80mm auto;
+        }
+
+        body {
+          margin: 0;
+          padding: 0;
+          width: 80mm;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
+        .barcode-label {
+          border: none;
+          break-inside: avoid;
+        }
+
+        .barcode-row {
+          break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="barcode-container">
+      ${rows
+        .map(
+          ([i]) => `
+        <div class="barcode-row">
+          <div class="barcode-label">
+            <div class="product-name">${selectedProduct.name || 'N/A'}</div>
+            <div class="barcode-svg"><svg id="barcode${i}"></svg></div>
+            <div class="bottom-info">
+              <span class="span1">${selectedProduct.code || 'N/A'}</span>
+              <span class="span2">${selectedProduct.selling_price ?? 'N/A'} LKR</span>
+            </div>
+          </div>
+        </div>
+      `
+        )
+        .join('')}
+    </div>
+  </body>
+  </html>
+`
+
+
+
+
+
+
+
+
+
+
+  const printWindow = window.open('', '_blank')
+  printWindow.document.write(htmlContent)
+  printWindow.document.close()
+
+  printWindow.onload = () => {
+    for (let i = 1; i <= count; i++) {
+      const svg = printWindow.document.getElementById(`barcode${i}`)
+      JsBarcode(svg, barcode, {
+        format: 'CODE128',
+        lineColor: '#000',
+        width: 1,
+        height: 35,
+        displayValue: false,
+        margin: 0,
+      })
+    }
+
+    setTimeout(() => {
+      printWindow.focus()
+      printWindow.print()
+      printWindow.close()
+    }, 500)
+  }
+}
+
+
 </script>
 
 <style>

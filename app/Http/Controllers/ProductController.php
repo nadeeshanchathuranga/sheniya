@@ -236,7 +236,7 @@ $productsQuery = Product::with('category', 'color', 'size', 'supplier')
             }
 
             if (empty($validated['barcode'])) {
-                $validated['barcode'] = $this->generateUniqueCode(12);
+                $validated['barcode'] = $this->generateUniqueCode(8);
             }
             $validated['total_quantity'] = $validated['stock_quantity'] ?? 0;
             // Create the product
@@ -308,7 +308,7 @@ $productsQuery = Product::with('category', 'color', 'size', 'supplier')
             // Product::create($validated);
 
             if (empty($validated['barcode'])) {
-                $validated['barcode'] = $this->generateUniqueCode(12);
+                $validated['barcode'] = $this->generateUniqueCode(8);
             }
 
             $product = Product::create($validated);
@@ -683,7 +683,7 @@ public function fetchProducts2(Request $request)
             }
 
             if (empty($data['barcode'])) {
-                $data['barcode'] = $this->generateUniqueCode(12);
+                $data['barcode'] = $this->generateUniqueCode(8);
             }
 
             $items = collect($data['products'])

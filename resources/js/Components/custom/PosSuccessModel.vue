@@ -217,7 +217,7 @@ const productRows = props.products
               margin: 0;
           }
           .header p {
-              font-size: 10px;
+              font-size: 12px;
               margin: 4px 0;
           }
           .section {
@@ -228,7 +228,7 @@ const productRows = props.products
           .info-row {
               display: flex;
               justify-content: space-between;
-              font-size: 12px;
+              font-size: 14px;
               margin-top: 8px;
           }
           .info-row p {
@@ -289,7 +289,7 @@ const productRows = props.products
   <body>
       <div class="receipt-container">
                 <div class="header">
-                  <img src="/images/billlogo.jpeg" style="width: 300px; height: 120px;" />
+                  <img src="/images/billlogo.png" style="width: 130px; height: 130px;" />
            ${companyInfo?.value?.name ? `<h1>${companyInfo.value.name}</h1>` : ''}
   ${companyInfo?.value?.address ? `<p>${companyInfo.value.address}</p>` : ''}
   ${(companyInfo?.value?.phone || companyInfo?.value?.phone2 || companyInfo?.value?.email)

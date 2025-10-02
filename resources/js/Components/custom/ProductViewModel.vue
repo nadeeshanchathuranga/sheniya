@@ -335,55 +335,47 @@ for (let i = 0; i < count; i++) {
 
 
 
+  const htmlContent = `
+    <html>
+    <head>
+     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {    font-family: "Poppins", sans-serif; monospace; background: white; }
 
-const htmlContent = `
- <html>
-  <head>
-   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+        .barcode-container {
+          width: 75mm;
+          margin: 0 auto;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 0mm;
+           margin-left: 10mm;
+        }
 
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { 
-        font-family: "Poppins", sans-serif; 
-        background: white;
-        width: 80mm; /* page width */
-        margin: 0 auto;
-      }
+        .barcode-row {
+          display: flex;
+          justify-content: space-between;
+          gap: 5mm;
+        }
 
-      .barcode-container {
-        width: 100%;
-        margin-left: 10mm;
-        margin-top: 2mm;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 0mm;
-      }
+        .barcode-label {
 
-      .barcode-row {
-        display: flex;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        gap: 2mm;
-      }
+          width: 37.5mm;
+          height: 25mm;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 0.2mm 0.5mm;
+          text-align: center;
+          background: white;
+          box-sizing: border-box;
+          overflow: hidden;
+        }
 
-      .barcode-label {
-        width: 30mm;
-        height: 22mm;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1mm 0.8mm;
-        text-align: center;
-        background: white;
-        box-sizing: border-box;
-        overflow: hidden;
-        border: 0.2mm solid #ddd; /* only for preview */
-      }
-
-      .product-name {
+           .product-name {
         font-size: 14px;
         font-weight: 600;
         line-height: 1.1;
@@ -394,21 +386,22 @@ const htmlContent = `
       }
 
       .barcode-svg {
-        width: 100%;
-        height: 12mm; /* increased height */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1mm 0; /* add top & bottom space */
-        overflow: hidden;
-      }
+  width: 100%;
+  height: 12mm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+    padding: 0 2mm;
+}
 
-      .barcode-svg svg {
-        width: 100%;
-        height: 100%;
-      }
+.barcode-svg svg {
+  width: 100%;
+  height: 100%;
+}
 
-      .bottom-info {
+
+    .bottom-info {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -419,60 +412,70 @@ const htmlContent = `
         line-height: 1;
       }
 
-      @media print {
-        @page {
-          margin: 1mm;
-          size: 80mm auto;
+        .bottom-info .span1 {
+          max-width: 30%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+ .bottom-info .span2 {
+          max-width: 68%;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        body {
-          margin: 0;
-          padding: 0;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
 
-        .barcode-label {
-          border: none; /* remove border on print */
-          break-inside: avoid;
-        }
+        @media print {
+          @page {
+            margin: 0;
+            size: 75mm auto;
+          }
 
-        .barcode-row {
-          break-inside: avoid;
+          body {
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+
+          .barcode-label {
+            border: none;
+            break-inside: avoid;
+          }
+
+          .barcode-row {
+            break-inside: avoid;
+          }
         }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="barcode-container">
-      ${rows
-        .map(
-          ([i]) => `
-        <div class="barcode-row">
-          <div class="barcode-label">
-            <div class="product-name">${selectedProduct.code || 'N/A'}</div>
-            <div class="barcode-svg"><svg id="barcode${i}"></svg></div>
-            <div class="bottom-info">${selectedProduct.selling_price ?? 'N/A'} LKR </div>
+      </style>
+    </head>
+    <body>
+      <div class="barcode-container">
+        ${rows
+          .map(
+            ([first, second]) => `
+          <div class="barcode-row">
+            ${[first, second]
+              .map((i) =>
+                i <= count
+                  ? `
+              <div class="barcode-label">
+                <div class="product-name">${selectedProduct.code || 'N/A'}</div>
+                <div class="barcode-svg"><svg id="barcode${i}"></svg></div>
+                <div class="bottom-info span2">${selectedProduct.selling_price ?? 'N/A'} LKR 
+                </div>
+              </div>
+            `
+                  : '<div class="barcode-label"></div>'
+              )
+              .join('')}
           </div>
-        </div>
-      `
-        )
-        .join('')}
-    </div>
-  </body>
-</html>
-
-
-`
-
-
-
-
-
-
-
-
-
+        `
+          )
+          .join('')}
+      </div>
+    </body>
+    </html>
+  `
 
   const printWindow = window.open('', '_blank')
   printWindow.document.write(htmlContent)
@@ -484,8 +487,8 @@ const htmlContent = `
       JsBarcode(svg, barcode, {
         format: 'CODE128',
         lineColor: '#000',
-        width: 1.5,
-        height: 50,
+        width: 1.2,
+        height: 48,
         displayValue: false,
         margin: 0,
       })

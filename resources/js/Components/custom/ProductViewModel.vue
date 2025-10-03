@@ -362,8 +362,8 @@ for (let i = 0; i < count; i++) {
 
         .barcode-label {
 
-          width: 37.5mm;
-          height: 25mm;
+          width: 30mm;
+          height: 20mm;
           display: flex;
           flex-direction: column;
           justify-content: center;

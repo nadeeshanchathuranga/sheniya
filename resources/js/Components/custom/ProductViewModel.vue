@@ -314,194 +314,150 @@ const barcodeCount = ref(1);
 
 
 
- function generateAndPrintBarcodes() {
-  const barcode = selectedProduct?.barcode
-  const count = parseInt(barcodeCount.value)
+function generateAndPrintBarcodes() {
+  const barcode = selectedProduct?.barcode;
+  const count = parseInt(barcodeCount.value, 10);
 
   if (!barcode || barcode.trim() === '') {
-    alert('Please enter a barcode value.')
-    return
+    alert('Please enter a barcode value.');
+    return;
   }
-
   if (!count || count < 1) {
-    alert('Please enter a valid number of barcodes.')
-    return
+    alert('Please enter a valid number of barcodes.');
+    return;
   }
 
-const rows = []
-for (let i = 0; i < count; i++) {
-  rows.push([i + 1])
-}
+  // ---- Sizing constants (mm/px) ----
+  const MM_TO_PX = 3.78;            // 1mm ≈ 3.78px (for JsBarcode height)
+  const LABEL_W_MM = 30;            // exact label width
+  const LABEL_H_MM = 18;            // exact label height
+  const INNER_PADDING_MM = 1;       // inner padding
+  const GUTTER_MM = 2;              // gap between labels
+  const BARCODE_H_MM = 12;          // height of barcode drawing area inside label
+  const NAME_FZ_PX = 9;             // product code font size
+  const PRICE_FZ_PX = 10;           // price font size
 
-
+  // Build labels
+  const labelsHtml = Array.from({ length: count }).map((_, idx) => `
+    <div class="barcode-label">
+      <div class="product-name">${selectedProduct?.code || 'N/A'}</div>
+      <div class="barcode-svg"><svg id="barcode${idx + 1}"></svg></div>
+      <div class="bottom-info">${(selectedProduct?.selling_price ?? 'N/A')} LKR</div>
+    </div>
+  `).join('');
 
   const htmlContent = `
     <html>
     <head>
-     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
       <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {    font-family: "Poppins", sans-serif; monospace; background: white; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { background:white; }
+        body { font-family:"Poppins", sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
+        /* Container fills page width and wraps labels */
         .barcode-container {
-          width: 75mm;
+          width: 100%;
           margin: 0 auto;
-          padding: 0;
           display: flex;
-          flex-direction: column;
-          gap: 0mm;
-           margin-left: 10mm;
+          flex-wrap: wrap;
+          gap: ${GUTTER_MM}mm;
+          align-content: flex-start;
+          justify-content: flex-start;
         }
 
-        .barcode-row {
-          display: flex;
-          justify-content: space-between;
-          gap: 5mm;
-        }
-
+        /* EXACT 30mm x 18mm label box */
         .barcode-label {
-
-          width: 75mm;
-          height: 20mm;
+          width: ${LABEL_W_MM}mm;
+          height: ${LABEL_H_MM}mm;
+          background: white;
+          padding: ${INNER_PADDING_MM}mm;
           display: flex;
           flex-direction: column;
-          justify-content: center;
           align-items: center;
-          padding: 0.2mm 0.5mm;
+          justify-content: space-between;
+          overflow: hidden;
+        }
+
+        .product-name {
+          font-size: ${NAME_FZ_PX}px;
+          font-weight: 600;
+          line-height: 1.1;
+          width: 100%;
           text-align: center;
-          background: white;
-          box-sizing: border-box;
-          overflow: hidden;
-        }
-
-           .product-name {
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 1.1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-      }
-
-      .barcode-svg {
-  width: 100%;
-  height: 12mm;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-    padding: 0 2mm;
-}
-
-.barcode-svg svg {
-  width: 100%;
-  height: 100%;
-}
-
-
-    .bottom-info {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 19px;
-        width: 100%;
-        font-weight: 700;
-        white-space: nowrap;
-        line-height: 1;
-      }
-
-        .bottom-info .span1 {
-          max-width: 30%;
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-        }
- .bottom-info .span2 {
-          max-width: 68%;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          margin-top: 0.2mm;
         }
 
+        .barcode-svg {
+          width: 100%;
+          height: ${BARCODE_H_MM}mm;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+        }
+        .barcode-svg svg {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+
+        .bottom-info {
+          font-size: ${PRICE_FZ_PX}px;
+          font-weight: 700;
+          line-height: 1;
+          white-space: nowrap;
+          width: 100%;
+          text-align: center;
+          margin-bottom: 0.2mm;
+        }
 
         @media print {
           @page {
-            margin: 5mm auto;
-            size: 30mm auto;
+            /* Small margins; keep printer at 100% scale */
+            margin: 5mm;
           }
-
-          body {
-            margin: 0;
-            margin-top: 10mm;
-            padding: 0;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-
-          .barcode-label {
-            border: none;
-            break-inside: avoid;
-          }
-
-          .barcode-row {
-            break-inside: avoid;
-          }
+          body { margin:0; padding:0; }
         }
       </style>
     </head>
     <body>
       <div class="barcode-container">
-        ${rows
-          .map(
-            ([first, second]) => `
-          <div class="barcode-row">
-            ${[first, second]
-              .map((i) =>
-                i <= count
-                  ? `
-              <div class="barcode-label">
-                <div class="product-name">${selectedProduct.code || 'N/A'}</div>
-                <div class="barcode-svg"><svg id="barcode${i}"></svg></div>
-                <div class="bottom-info span2">${selectedProduct.selling_price ?? 'N/A'} LKR 
-                </div>
-              </div>
-            `
-                  : '<div class="barcode-label"></div>'
-              )
-              .join('')}
-          </div>
-        `
-          )
-          .join('')}
+        ${labelsHtml}
       </div>
     </body>
     </html>
-  `
+  `;
 
-  const printWindow = window.open('', '_blank')
-  printWindow.document.write(htmlContent)
-  printWindow.document.close()
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(htmlContent);
+  printWindow.document.close();
 
   printWindow.onload = () => {
     for (let i = 1; i <= count; i++) {
-      const svg = printWindow.document.getElementById(`barcode${i}`)
+      const svg = printWindow.document.getElementById(`barcode${i}`);
+      if (!svg) continue;
       JsBarcode(svg, barcode, {
         format: 'CODE128',
         lineColor: '#000',
-        width: 1.2,
-        height: 48,
+        width: 1,                                   // bar module (px) – SVG scales to 30mm width
+        height: Math.round(BARCODE_H_MM * MM_TO_PX),// convert mm → px for library
         displayValue: false,
         margin: 0,
-      })
+      });
     }
 
     setTimeout(() => {
-      printWindow.focus()
-      printWindow.print()
-      printWindow.close()
-    }, 500)
-  }
+      printWindow.focus();
+      printWindow.print();   // ensure print dialog uses 100% scaling (no "Fit to page")
+      printWindow.close();
+    }, 400);
+  };
 }
+
 
 
 </script>

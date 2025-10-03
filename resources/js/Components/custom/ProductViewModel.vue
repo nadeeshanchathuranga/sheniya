@@ -426,12 +426,13 @@ for (let i = 0; i < count; i++) {
 
         @media print {
           @page {
-            margin: 0;
+            margin: 5mm auto;
             size: 75mm auto;
           }
 
           body {
             margin: 0;
+            margin-top: 10mm;
             padding: 0;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;

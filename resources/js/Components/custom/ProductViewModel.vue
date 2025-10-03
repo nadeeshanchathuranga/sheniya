@@ -427,7 +427,7 @@ for (let i = 0; i < count; i++) {
         @media print {
           @page {
             margin: 5mm auto;
-            size: 75mm auto;
+            size: 30mm auto;
           }
 
           body {

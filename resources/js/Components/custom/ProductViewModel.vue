@@ -274,6 +274,7 @@ function generateAndPrintBarcodes() {
         .barcode-container {
           width: 100%;
           margin: 0;
+          margin-top: 5mm;
           padding: 0;
           display: flex;
           flex-wrap: wrap;

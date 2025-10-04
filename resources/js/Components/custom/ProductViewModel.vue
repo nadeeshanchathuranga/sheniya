@@ -255,7 +255,7 @@ function generateAndPrintBarcodes() {
 
   // Build labels HTML
   const labelsHtml = Array.from({ length: count }).map((_, idx) => `
-    <div class="barcode-label">
+    <div class="barcode-label "  style="margin-top: 2px;">
       <div class="product-name">${selectedProduct?.code || 'N/A'}</div>
       <div class="barcode-svg"><svg id="barcode${idx + 1}"></svg></div>
       <div class="bottom-info">${(selectedProduct?.selling_price ?? 'N/A')} LKR</div>
@@ -274,7 +274,7 @@ function generateAndPrintBarcodes() {
         .barcode-container {
           width: 100%;
           margin: 0;
-          margin-top: 5mm;
+          margin-top: 2mm;
           padding: 0;
           display: flex;
           flex-wrap: wrap;

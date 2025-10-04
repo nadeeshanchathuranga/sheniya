@@ -247,11 +247,11 @@ function generateAndPrintBarcodes() {
   const MM_TO_PX = 3.78;
   const LABEL_W_MM = 30;
   const LABEL_H_MM = 18;
-  const INNER_PADDING_MM = 1;
-  const GUTTER_MM = 2;
-  const BARCODE_H_MM = 12;
+  const INNER_PADDING_MM = 0.5;
+  const GUTTER_MM = 0; // Removed gap - configured in printer
+  const BARCODE_H_MM = 8; // Reduced from 12
   const NAME_FZ_PX = 9;
-  const PRICE_FZ_PX = 10;
+  const PRICE_FZ_PX = 14; // Increased from 10
 
   // Build labels HTML
   const labelsHtml = Array.from({ length: count }).map((_, idx) => `
@@ -268,12 +268,13 @@ function generateAndPrintBarcodes() {
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
       <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { background:white; }
+        html, body { background:white; margin:0; padding:0; }
         body { font-family:"Poppins", sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
         .barcode-container {
           width: 100%;
-          margin: 0 auto;
+          margin: 0;
+          padding: 0;
           display: flex;
           flex-wrap: wrap;
           gap: ${GUTTER_MM}mm;
@@ -291,6 +292,7 @@ function generateAndPrintBarcodes() {
           align-items: center;
           justify-content: space-between;
           overflow: hidden;
+          margin: 0;
         }
 
         .product-name {
@@ -302,7 +304,8 @@ function generateAndPrintBarcodes() {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          margin-top: 0.2mm;
+          margin: 0;
+          padding: 0;
         }
 
         .barcode-svg {
@@ -312,6 +315,8 @@ function generateAndPrintBarcodes() {
           align-items: center;
           justify-content: center;
           overflow: hidden;
+          margin: 0;
+          padding: 0;
         }
         .barcode-svg svg {
           width: 100%;
@@ -326,14 +331,23 @@ function generateAndPrintBarcodes() {
           white-space: nowrap;
           width: 100%;
           text-align: center;
-          margin-bottom: 0.2mm;
+          margin: 0;
+          padding: 0;
         }
 
         @media print {
           @page {
-            margin: 0mm;
+            margin: 0;
+            padding: 0;
           }
-          body { margin:0; padding:0; }
+          html, body { 
+            margin: 0; 
+            padding: 0; 
+          }
+          .barcode-container {
+            margin: 0;
+            padding: 0;
+          }
         }
       </style>
     </head>

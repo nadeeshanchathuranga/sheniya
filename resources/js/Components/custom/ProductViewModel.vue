@@ -248,10 +248,10 @@ function generateAndPrintBarcodes() {
   const LABEL_W_MM = 30;
   const LABEL_H_MM = 18;
   const INNER_PADDING_MM = 0.5;
-  const GUTTER_MM = 0; // Removed gap - configured in printer
+  const GUTTER_MM = 0;  
   const BARCODE_H_MM = 8; // Reduced from 12
   const NAME_FZ_PX = 9;
-  const PRICE_FZ_PX = 14; // Increased from 10
+  const PRICE_FZ_PX = 14;  
 
   // Build labels HTML
   const labelsHtml = Array.from({ length: count }).map((_, idx) => `

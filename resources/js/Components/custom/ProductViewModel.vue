@@ -255,7 +255,7 @@ function generateAndPrintBarcodes() {
 
   // Build labels HTML
   const labelsHtml = Array.from({ length: count }).map((_, idx) => `
-    <div class="barcode-label "  style="margin-top: 2px;">
+    <div class="barcode-label">
       <div class="product-name">${selectedProduct?.code || 'N/A'}</div>
       <div class="barcode-svg"><svg id="barcode${idx + 1}"></svg></div>
       <div class="bottom-info">${(selectedProduct?.selling_price ?? 'N/A')} LKR</div>
@@ -268,7 +268,7 @@ function generateAndPrintBarcodes() {
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
       <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { background:white; margin:0; padding:0; }
+        html, body { background:white; margin:0; padding:0; padding-top: 3mm; }
         body { font-family:"Poppins", sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
         .barcode-container {

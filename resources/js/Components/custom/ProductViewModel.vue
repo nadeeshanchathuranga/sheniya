@@ -11,9 +11,7 @@
         leave-from="opacity-100"
         leave-to="opacity-0"
       >
-        <div
-          class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-        />
+        <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" />
       </TransitionChild>
 
       <!-- Modal Content -->
@@ -27,85 +25,61 @@
           leave-from="opacity-100 scale-100"
           leave-to="opacity-0 scale-95"
         >
-          <DialogPanel
-            class="bg-white text-black border-4 border-blue-600 rounded-[20px] shadow-xl w-5/6 lg:w-3/6 p-6"
-          >
-            <div
-              class="flex flex-col items-start justify-start w-full h-full px-2 pt-4"
-            >
-              <div
-                class="flex justify-center w-full h-full py-4 space-x-8 items-start-center"
-              >
+          <DialogPanel class="bg-white text-black border-4 border-blue-600 rounded-[20px] shadow-xl w-5/6 lg:w-3/6 p-6">
+            <div class="flex flex-col items-start justify-start w-full h-full px-2 pt-4">
+              <div class="flex justify-center w-full h-full py-4 space-x-8 items-start-center">
                 <!-- Left Side: Image -->
                 <div class="w-1/2">
                   <img
-                    :src="
-                      selectedProduct.image
-                        ? `/${selectedProduct.image}`
-                        : '/images/placeholder.jpg'
-                    "
+                    :src="selectedProduct.image ? `/${selectedProduct.image}` : '/images/placeholder.jpg'"
                     alt="Product Image"
                     class="object-cover h-full rounded-2xl"
                   />
                 </div>
 
-                <!-- Right Side: Text Content -->
+                <!-- Right Side: Product Details -->
                 <div class="flex flex-col justify-between w-1/2 h-full">
+                  <!-- Product Name & Discount Badge -->
                   <div class="flex items-center justify-between">
-                    <!-- Product Name -->
                     <p class="text-3xl font-bold text-black w-full break-words">
                       {{ selectedProduct.name }}
-
                       <span
-                        v-if="
-                          selectedProduct.discount &&
-                          selectedProduct.discount > 0
-                        "
+                        v-if="selectedProduct.discount && selectedProduct.discount > 0"
                         class="inline-block px-2 py-2 text-sm font-medium text-white bg-red-600 rounded"
                       >
                         {{ selectedProduct.discount }} % OFF
                       </span>
                     </p>
-
-                    <!-- Discounted Price -->
                   </div>
 
-                  <p
-                    class="pb-6 mt-2 text-[#00000099] text-xl font-normal italic"
-                  >
+                  <!-- Category -->
+                  <p class="pb-6 mt-2 text-[#00000099] text-xl font-normal italic">
                     {{ selectedProduct.category?.name ?? "No Category" }}
                   </p>
 
+                  <!-- Supplier -->
                   <p class="pb-6 text-2xl font-bold text-black">
-                    <span class="text-[#00000099] font-normal">Supplier : </span
-                    >{{ selectedProduct.supplier?.name || "N/A" }}
+                    <span class="text-[#00000099] font-normal">Supplier: </span>
+                    {{ selectedProduct.supplier?.name || "N/A" }}
                   </p>
 
+                  <!-- Product Code -->
                   <p class="pb-6 text-2xl font-bold text-black">
-                    <span class="text-[#00000099] font-normal"
-                      >Product Code :
-                    </span>
-
+                    <span class="text-[#00000099] font-normal">Product Code: </span>
                     {{ selectedProduct?.code ?? "N/A" }}
                   </p>
-                  <p class="pb-6 text-2xl font-bold text-black">
-                    <span class="text-[#00000099] font-normal"
-                      >Batch No :
-                    </span>
 
+                  <!-- Batch Number -->
+                  <p class="pb-6 text-2xl font-bold text-black">
+                    <span class="text-[#00000099] font-normal">Batch No: </span>
                     {{ selectedProduct?.batch_no ?? "N/A" }}
                   </p>
 
-
-                  <div
-                    class="flex items-center justify-between w-full text-2xl"
-                  >
+                  <!-- Color -->
+                  <div class="flex items-center justify-between w-full text-2xl">
                     <div class="flex flex-col w-full">
-                      <p
-                        class="text-justify text-[#00000099] text-2xl flex items-center pb-6"
-                      >
-                        Color :
-
+                      <p class="text-justify text-[#00000099] text-2xl flex items-center pb-6">
+                        Color:
                         <span class="font-bold text-black">
                           {{ selectedProduct?.color?.name ?? "N/A" }}
                         </span>
@@ -113,51 +87,41 @@
                     </div>
                   </div>
 
-                  <div
-                    class="flex items-center justify-between w-full text-2xl"
-                  >
+                  <!-- Size -->
+                  <div class="flex items-center justify-between w-full text-2xl">
                     <div class="flex flex-col w-full">
                       <p class="text-[#00000099] text-2xl pb-6">
-                        Size :
-                        <span
-                          class="px-2 py-2 font-bold text-black border-2 border-gray-800 rounded-xl"
-                        >
+                        Size:
+                        <span class="px-2 py-2 font-bold text-black border-2 border-gray-800 rounded-xl">
                           {{ selectedProduct?.size?.name ?? "N/A" }}
                         </span>
                       </p>
                     </div>
                   </div>
 
-                  <div
-                    class="flex items-center justify-between w-full pb-6 text-2xl"
-                  >
+                  <!-- Selling Price & Cost Price -->
+                  <div class="flex items-center justify-between w-full pb-6 text-2xl">
                     <div class="flex flex-col w-full">
-                      <p class="text-[#00000099]">Selling Price :</p>
+                      <p class="text-[#00000099]">Selling Price:</p>
                       <p class="font-bold text-black">
-                        {{ selectedProduct?.selling_price ?? "N/A" }}
-                        LKR
+                        {{ selectedProduct?.selling_price ?? "N/A" }} LKR
                       </p>
                     </div>
                     <div class="flex flex-col w-full">
-                      <p class="text-[#00000099]">Cost Price :</p>
+                      <p class="text-[#00000099]">Cost Price:</p>
                       <p class="font-bold text-black">
-                        {{ selectedProduct?.cost_price ?? "N/A" }}
-
-                        LKR
+                        {{ selectedProduct?.cost_price ?? "N/A" }} LKR
                       </p>
                     </div>
                   </div>
 
-                  <div
-                    class="flex items-center justify-between w-full pb-6 text-2xl"
-                  >
+                  <!-- Discount Price & Quantity -->
+                  <div class="flex items-center justify-between w-full pb-6 text-2xl">
                     <div
                       class="flex flex-col w-full"
-                      v-if="
-                        selectedProduct.discount && selectedProduct.discount > 0
-                      "
+                      v-if="selectedProduct.discount && selectedProduct.discount > 0"
                     >
-                      <p class="text-[#00000099]">Discount Price :</p>
+                      <p class="text-[#00000099]">Discount Price:</p>
                       <p class="font-bold text-black">
                         {{
                           selectedProduct.selling_price &&
@@ -165,9 +129,7 @@
                           selectedProduct.discount > 0
                             ? (
                                 selectedProduct.selling_price -
-                                (selectedProduct.selling_price *
-                                  selectedProduct.discount) /
-                                  100
+                                (selectedProduct.selling_price * selectedProduct.discount) / 100
                               ).toFixed(2)
                             : selectedProduct.selling_price
                         }}
@@ -175,73 +137,37 @@
                       </p>
                     </div>
                     <div class="flex flex-col w-full">
-                      <p class="text-[#00000099]">Quantity :</p>
+                      <p class="text-[#00000099]">Quantity:</p>
                       <p class="font-bold text-black">
                         {{ selectedProduct?.stock_quantity ?? "N/A" }}
                       </p>
                     </div>
                   </div>
 
+                  <!-- Created Date -->
                   <p class="pb-8 text-2xl font-bold text-black">
-                    <span class="text-[#00000099] font-normal"
-                      >Created On :
-                    </span>
+                    <span class="text-[#00000099] font-normal">Created On: </span>
                     {{ formattedDate }}
                   </p>
 
-                  <div class="mt-2">
-              <!-- Inside Right Side under Print Barcode Button -->
-<div class="mt-4 w-full">
-  <label class="block mb-1 text-xl text-gray-700">Number of Barcodes:</label>
-  <input
-    type="number"
-    v-model="barcodeCount"
-    min="1"
-    class="w-full px-4 py-2 text-xl border rounded focus:outline-none focus:ring focus:ring-blue-300"
-  />
-</div>
-
-<button
-  v-if="HasRole(['Admin', 'Manager'])"
-  class="w-full px-4 py-3 mt-4 text-2xl font-semibold tracking-widest text-white bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-  @click="generateAndPrintBarcodes"
->
-  Print Bar Codes
-</button>
+                  <!-- Barcode Printing Section -->
+                  <div class="mt-2" v-if="HasRole(['Admin', 'Manager'])">
+                    <label class="block mb-1 text-xl text-gray-700">Number of Barcodes:</label>
+                    <input
+                      type="number"
+                      v-model="barcodeCount"
+                      min="1"
+                      class="w-full px-4 py-2 text-xl border rounded focus:outline-none focus:ring focus:ring-blue-300"
+                    />
+                    <button
+                      class="w-full px-4 py-3 mt-4 text-2xl font-semibold tracking-widest text-white bg-blue-600 rounded-xl hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
+                      @click="generateAndPrintBarcodes"
+                    >
+                      Print Bar Codes
+                    </button>
                   </div>
                 </div>
               </div>
-
-              <!-- Hidden container for printing -->
-
-
-
-
-<!-- Print container for multiple barcodes -->
-<div :class="{ hidden: !isVisible }" id="printContainer" class="print-container">
-  <div class="print-wrapper">
-    <div
-      class="print-content"
-      v-for="n in barcodeCount"
-      :key="n"
-    >
-      <p class="product-code">{{ selectedProduct?.name || "N/A" }}</p>
-      <svg :id="`barcodePrint${n}`"></svg>
-      <div class="product-details">
-        <p class="product-category">{{ selectedProduct?.code ?? "N/A" }}</p>
-        <p class="product-price">{{ selectedProduct?.selling_price ?? "N/A" }} LKR</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-
-
             </div>
           </DialogPanel>
         </TransitionChild>
@@ -249,9 +175,6 @@
     </Dialog>
   </TransitionRoot>
 </template>
-
-
-
 
 <script setup>
 import {
@@ -264,20 +187,18 @@ import {
 import { ref, watch, computed } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import { HasRole } from "@/Utils/Permissions";
+
+dayjs.extend(advancedFormat);
 
 const playClickSound = () => {
   const clickSound = new Audio("/sounds/click-sound.mp3");
   clickSound.play();
 };
 
-// Extend Day.js for ordinal formatting
-import advancedFormat from "dayjs/plugin/advancedFormat";
-dayjs.extend(advancedFormat);
-
 const emit = defineEmits(["update:open"]);
 
-// The `open` prop controls the visibility of the modal
 const { selectedProduct } = defineProps({
   open: {
     type: Boolean,
@@ -297,22 +218,17 @@ const { selectedProduct } = defineProps({
   },
   selectedProduct: {
     type: Object,
-    default: null, // Ensure it defaults to null
+    default: null,
   },
 });
 
-// Computed property to format the date
+const barcodeCount = ref(1);
+
 const formattedDate = computed(() =>
   selectedProduct && selectedProduct.created_at
     ? dayjs(selectedProduct.created_at).format("Do MMMM YYYY")
     : ""
 );
-
-
-
-const barcodeCount = ref(1);
-
-
 
 function generateAndPrintBarcodes() {
   const barcode = selectedProduct?.barcode;
@@ -327,17 +243,17 @@ function generateAndPrintBarcodes() {
     return;
   }
 
-  // ---- Sizing constants (mm/px) ----
-  const MM_TO_PX = 3.78;            // 1mm ≈ 3.78px (for JsBarcode height)
-  const LABEL_W_MM = 30;            // exact label width
-  const LABEL_H_MM = 18;            // exact label height
-  const INNER_PADDING_MM = 1;       // inner padding
-  const GUTTER_MM = 2;              // gap between labels
-  const BARCODE_H_MM = 12;          // height of barcode drawing area inside label
-  const NAME_FZ_PX = 9;             // product code font size
-  const PRICE_FZ_PX = 10;           // price font size
+  // Sizing constants (mm/px)
+  const MM_TO_PX = 3.78;
+  const LABEL_W_MM = 30;
+  const LABEL_H_MM = 18;
+  const INNER_PADDING_MM = 1;
+  const GUTTER_MM = 2;
+  const BARCODE_H_MM = 12;
+  const NAME_FZ_PX = 9;
+  const PRICE_FZ_PX = 10;
 
-  // Build labels
+  // Build labels HTML
   const labelsHtml = Array.from({ length: count }).map((_, idx) => `
     <div class="barcode-label">
       <div class="product-name">${selectedProduct?.code || 'N/A'}</div>
@@ -355,7 +271,6 @@ function generateAndPrintBarcodes() {
         html, body { background:white; }
         body { font-family:"Poppins", sans-serif; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
 
-        /* Container fills page width and wraps labels */
         .barcode-container {
           width: 100%;
           margin: 0 auto;
@@ -366,7 +281,6 @@ function generateAndPrintBarcodes() {
           justify-content: flex-start;
         }
 
-        /* EXACT 30mm x 18mm label box */
         .barcode-label {
           width: ${LABEL_W_MM}mm;
           height: ${LABEL_H_MM}mm;
@@ -417,7 +331,6 @@ function generateAndPrintBarcodes() {
 
         @media print {
           @page {
-            /* Small margins; keep printer at 100% scale */
             margin: 5mm;
           }
           body { margin:0; padding:0; }
@@ -443,8 +356,8 @@ function generateAndPrintBarcodes() {
       JsBarcode(svg, barcode, {
         format: 'CODE128',
         lineColor: '#000',
-        width: 1,                                   // bar module (px) – SVG scales to 30mm width
-        height: Math.round(BARCODE_H_MM * MM_TO_PX),// convert mm → px for library
+        width: 1,
+        height: Math.round(BARCODE_H_MM * MM_TO_PX),
         displayValue: false,
         margin: 0,
       });
@@ -452,74 +365,9 @@ function generateAndPrintBarcodes() {
 
     setTimeout(() => {
       printWindow.focus();
-      printWindow.print();   // ensure print dialog uses 100% scaling (no "Fit to page")
+      printWindow.print();
       printWindow.close();
     }, 400);
   };
 }
-
-
-
 </script>
-
-<style>
-@media print {
-  /* Label container */
-  #printContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    margin-top: 0;
-  }
-
-  /* Print content */
-  .print-content {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    margin-top: 2mm;
-  }
-
-  /* Barcode centered and full width */
-  #barcodePrint {
-    width: 100%;
-    margin-left: 12mm;
-  }
-
-  /* Product details */
-  .product-details {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    font-size: 10px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    margin-left: 12mm;
-  }
-
-  .product-category,
-  .product-price {
-    color: #000;
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Product code */
-  .product-code {
-    color: #000;
-    font-size: 10px;
-    font-weight: bold;
-    margin-top: 5px;
-    margin-left: 10mm;
-  }
-}
-</style>
-

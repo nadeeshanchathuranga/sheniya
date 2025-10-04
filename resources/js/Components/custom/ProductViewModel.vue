@@ -331,7 +331,7 @@ function generateAndPrintBarcodes() {
 
         @media print {
           @page {
-            margin: 5mm;
+            margin: 0mm;
           }
           body { margin:0; padding:0; }
         }
